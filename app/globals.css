@@ -1,26 +1,225 @@
 @import "tailwindcss";
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  /* sensible fallbacks */
+  --bg: 0 0% 100%;
+  --fg: 240 10% 10%;
+  --muted: 240 6% 90%;
+  --card: 0 0% 100%;
+  --accent: 212 100% 50%;
+  --accent2: 48 100% 50%;
+  --border: 240 6% 80%;
+  --ring: 212 100% 50%;
+
+  --font-display: "Poppins";
+  --font-body: "Inter";
+  --font-mono: "JetBrains Mono";
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+/* ========= 1) MODERN (Mondrian) ========= */
+.theme-modern {
+  --bg: 0 0% 99%;
+  --fg: 234 14% 14%;
+  --muted: 240 6% 92%;
+  --card: 0 0% 100%;
+  --accent: 0 85% 50%;      /* red */
+  --accent2: 220 86% 48%;   /* blue */
+  --border: 0 0% 12%;
+  --ring: 48 100% 50%;      /* yellow */
+
+  --font-display: "Montserrat";
+  --font-body: "Inter";
+  --font-mono: "JetBrains Mono";
+}
+.dark.theme-modern {
+  --bg: 230 10% 10%;
+  --fg: 0 0% 98%;
+  --muted: 230 6% 18%;
+  --card: 230 10% 14%;
+  --accent: 0 85% 60%;
+  --accent2: 220 86% 66%;
+  --border: 230 6% 25%;
+  --ring: 48 100% 60%;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+/* ========= 2) IMPRESSIONIST (Van Gogh/Monet) ========= */
+.theme-impressionist {
+  --bg: 210 60% 98%;
+  --fg: 225 15% 20%;
+  --muted: 210 40% 92%;
+  --card: 0 0% 100%;
+  --accent: 205 70% 55%;    /* sky blue */
+  --accent2: 50 70% 58%;    /* warm yellow */
+  --border: 214 18% 80%;
+  --ring: 135 35% 45%;      /* soft green */
+
+  --font-display: "Playfair Display";
+  --font-body: "Quicksand";
+  --font-mono: "IBM Plex Mono";
+}
+.dark.theme-impressionist {
+  --bg: 220 25% 12%;
+  --fg: 0 0% 98%;
+  --muted: 220 20% 18%;
+  --card: 220 20% 16%;
+  --accent: 205 70% 65%;
+  --accent2: 50 80% 62%;
+  --border: 220 10% 28%;
+  --ring: 135 35% 55%;
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+/* ========= 3) CUBIST (neo-brutalist) ========= */
+.theme-cubist {
+  --bg: 40 20% 96%;
+  --fg: 220 18% 14%;
+  --muted: 40 14% 88%;
+  --card: 0 0% 100%;
+  --accent: 15 65% 45%;     /* rust/orange */
+  --accent2: 200 25% 38%;   /* muted teal */
+  --border: 220 10% 22%;
+  --ring: 0 0% 0%;
+
+  --font-display: "Bebas Neue";
+  --font-body: "Inter Tight";
+  --font-mono: "JetBrains Mono";
+}
+.dark.theme-cubist {
+  --bg: 220 12% 10%;
+  --fg: 0 0% 98%;
+  --muted: 220 10% 18%;
+  --card: 220 12% 14%;
+  --accent: 15 70% 55%;
+  --accent2: 200 30% 48%;
+  --border: 220 10% 28%;
+  --ring: 0 0% 100%;
+}
+
+/* ========= 4) DUTCH BAROQUE (Rembrandt) ========= */
+.theme-dutch {
+  --bg: 36 30% 96%;         /* warm parchment */
+  --fg: 30 25% 16%;
+  --muted: 36 20% 88%;
+  --card: 0 0% 100%;
+  --accent: 42 80% 48%;     /* golden ochre */
+  --accent2: 12 60% 32%;    /* umber/red-brown */
+  --border: 30 15% 30%;
+  --ring: 42 80% 48%;
+
+  --font-display: "Cormorant Garamond";
+  --font-body: "Alegreya Sans";
+  --font-mono: "IBM Plex Mono";
+}
+.dark.theme-dutch {
+  --bg: 30 18% 10%;         /* chiaroscuro */
+  --fg: 36 30% 94%;
+  --muted: 30 12% 18%;
+  --card: 30 16% 14%;
+  --accent: 42 85% 55%;
+  --accent2: 12 65% 40%;
+  --border: 30 10% 28%;
+  --ring: 42 85% 55%;
+}
+
+/* ========= 5) RENAISSANCE ========= */
+.theme-renaissance {
+  --bg: 36 30% 97%;
+  --fg: 230 22% 15%;
+  --muted: 36 18% 90%;
+  --card: 0 0% 100%;
+  --accent: 220 80% 42%;    /* ultramarine nod */
+  --accent2: 48 90% 50%;    /* gold leaf */
+  --border: 230 12% 30%;
+  --ring: 220 80% 42%;
+
+  --font-display: "EB Garamond";
+  --font-body: "Lora";
+  --font-mono: "Source Code Pro";
+}
+.dark.theme-renaissance {
+  --bg: 230 18% 11%;
+  --fg: 36 30% 96%;
+  --muted: 230 12% 18%;
+  --card: 230 12% 14%;
+  --accent: 220 85% 58%;
+  --accent2: 48 92% 58%;
+  --border: 230 10% 28%;
+  --ring: 220 85% 58%;
+}
+
+/* ========= 6) ASIAN (ink/red/black/white) ========= */
+.theme-asian {
+  --bg: 0 0% 99%;
+  --fg: 0 0% 6%;
+  --muted: 0 0% 92%;
+  --card: 0 0% 100%;
+  --accent: 0 80% 46%;      /* vermilion */
+  --accent2: 0 0% 0%;       /* sumi ink */
+  --border: 0 0% 12%;
+  --ring: 0 80% 46%;
+
+  --font-display: "Noto Serif JP";
+  --font-body: "Noto Sans";
+  --font-mono: "JetBrains Mono";
+}
+.dark.theme-asian {
+  --bg: 0 0% 6%;
+  --fg: 0 0% 96%;
+  --muted: 0 0% 16%;
+  --card: 0 0% 10%;
+  --accent: 0 80% 56%;
+  --accent2: 0 0% 100%;
+  --border: 0 0% 24%;
+  --ring: 0 80% 56%;
+}
+
+/* ========= 7) NATIVE AMERICAN (Indian Group of Seven inspired) ========= */
+.theme-indigenous {
+  --bg: 200 40% 98%;        /* open sky */
+  --fg: 210 20% 14%;
+  --muted: 200 25% 90%;
+  --card: 0 0% 100%;
+  --accent: 184 60% 40%;    /* turquoise */
+  --accent2: 18 65% 46%;    /* terracotta */
+  --border: 210 10% 28%;
+  --ring: 35 60% 52%;       /* prairie gold */
+
+  --font-display: "Oswald";
+  --font-body: "Source Sans 3";
+  --font-mono: "Roboto Mono";
+}
+.dark.theme-indigenous {
+  --bg: 210 18% 10%;
+  --fg: 0 0% 98%;
+  --muted: 210 14% 18%;
+  --card: 210 16% 14%;
+  --accent: 184 60% 52%;
+  --accent2: 18 70% 56%;
+  --border: 210 10% 28%;
+  --ring: 35 65% 58%;
+}
+
+/* ========= 8) AFRICAN ART (earth + kente accents) ========= */
+.theme-african {
+  --bg: 42 45% 97%;         /* warm sand */
+  --fg: 20 30% 14%;
+  --muted: 42 30% 88%;
+  --card: 0 0% 100%;
+  --accent: 25 80% 44%;     /* ochre */
+  --accent2: 130 50% 34%;   /* deep green */
+  --border: 20 15% 28%;
+  --ring: 0 70% 46%;        /* red accent */
+
+  --font-display: "Sen";
+  --font-body: "Mulish";
+  --font-mono: "Fira Code";
+}
+.dark.theme-african {
+  --bg: 24 22% 10%;
+  --fg: 42 45% 96%;
+  --muted: 24 18% 18%;
+  --card: 24 18% 14%;
+  --accent: 25 85% 54%;
+  --accent2: 130 55% 44%;
+  --border: 24 12% 28%;
+  --ring: 0 75% 54%;
 }
