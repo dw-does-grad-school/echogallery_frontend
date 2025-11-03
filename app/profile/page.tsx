@@ -2,190 +2,126 @@
 
 import { useState, useEffect } from 'react';
 import { useUser } from '@clerk/nextjs';
-
-const THEMES = [
-  'theme-modern',
-  'theme-impressionist',
-  'theme-cubist',
-  'theme-dutch',
-  'theme-renaissance',
-  'theme-asian',
-  'theme-indigenous',
-  'theme-african',
-];
+import Image from 'next/image';
+import Link from 'next/link';
+import { getCurrentUser } from '@/app/actions/user-actions';
 
 export default function ProfilePage() {
-  const { user, isLoaded } = useUser();
-  const [location, setLocation] = useState('');
-  const [favoriteMuseum, setFavoriteMuseum] = useState('');
-  const [theme, setTheme] = useState('theme-modern');
-  const [dark, setDark] = useState(true);
+  const { user: clerkUser, isLoaded: clerkLoaded } = useUser();
+  const [dbUser, setDbUser] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
 
-  // Apply theme changes in real-time
   useEffect(() => {
-    const html = document.documentElement;
-    THEMES.forEach(t => html.classList.remove(t));
-    html.classList.remove('dark');
-    html.classList.add(theme);
-    if (dark) html.classList.add('dark');
-  }, [theme, dark]);
+    async function fetchUserData() {
+      if (clerkLoaded && clerkUser) {
+        try {
+          const result = await getCurrentUser();
+          if (result.error) {
+            console.error('Error fetching user:', result.error);
+          } else {
+            setDbUser(result.user);
+          }
+        } catch (error) {
+          console.error('Error fetching user data:', error);
+        } finally {
+          setLoading(false);
+        }
+      } else if (clerkLoaded && !clerkUser) {
+        setLoading(false);
+      }
+    }
 
-  // Initialize theme from HTML element on mount
-  useEffect(() => {
-    const html = document.documentElement;
-    const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
-    const isDark = html.classList.contains('dark');
-    setTheme(currentTheme);
-    setDark(isDark);
-  }, []);
+    fetchUserData();
+  }, [clerkLoaded, clerkUser]);
 
-  const handleSubmit = (e: React.FormEvent) => {
-    e.preventDefault();
-    // TODO: Implement save functionality
-    console.log({ location, favoriteMuseum, theme, dark });
-  };
-
-  if (!isLoaded) {
+  if (!clerkLoaded || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen">
-        <div className="text-lg">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-lg text-gray-600">Loading...</div>
       </div>
     );
   }
 
+  if (!clerkUser) {
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold text-gray-900 mb-4">Please sign in</h1>
+          <p className="text-gray-600">You need to be signed in to view your profile.</p>
+        </div>
+      </div>
+    );
+  }
+
+  const userImage = clerkUser.imageUrl || '/favicon.ico';
+  const displayName = dbUser?.name || clerkUser.fullName || clerkUser.firstName || 'User';
+  const email = clerkUser.primaryEmailAddress?.emailAddress || dbUser?.email || 'Not set';
+  const location = dbUser?.location || 'Not set';
+
   return (
-    <div className="min-h-screen bg-gradient-to-br from-gray-50 to-gray-100 dark:from-gray-900 dark:to-gray-800 py-12 px-4 sm:px-6 lg:px-8">
-      <div className="max-w-3xl mx-auto">
-        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-xl p-8">
-          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
-            Profile Settings
-          </h1>
-          <p className="text-gray-600 dark:text-gray-400 mb-8">
-            Manage your profile information and preferences
-          </p>
+    <div className="h-screen bg-gray-50 overflow-hidden">
+      <div className="flex h-full">
+        {/* Main Content Area - Left side, blank for now */}
+        <div className="flex-1 p-8">
+          {/* Empty for now as requested */}
+        </div>
 
-          <form onSubmit={handleSubmit} className="space-y-6">
-            {/* Location Input */}
-            <div>
-              <label
-                htmlFor="location"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Where do you live?
-              </label>
-              <input
-                type="text"
-                id="location"
-                value={location}
-                onChange={(e) => setLocation(e.target.value)}
-                placeholder="Enter your location (e.g., New York, NY)"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-              />
+        {/* Right Sidebar */}
+        <div className="w-80 h-full bg-white border-l border-gray-200 shadow-sm">
+          <div className="p-6">
+            {/* Profile Header */}
+            <div className="flex flex-col items-center mb-6">
+              <div className="relative mb-4">
+                <Image
+                  src={userImage}
+                  alt={displayName}
+                  width={96}
+                  height={96}
+                  className="rounded-full border-4 border-gray-200"
+                  unoptimized={userImage.startsWith('http')}
+                />
+              </div>
+              <h2 className="text-xl font-semibold text-gray-900 mb-1">{displayName}</h2>
+              <p className="text-sm text-gray-500">{email}</p>
             </div>
 
-            {/* Favorite Museum Input */}
-            <div>
-              <label
-                htmlFor="favoriteMuseum"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
+            {/* Edit Button */}
+            <div className="mb-6">
+              <Link
+                href="/profile/settings"
+                className="w-full block text-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
               >
-                Your Favorite Museum
-              </label>
-              <input
-                type="text"
-                id="favoriteMuseum"
-                value={favoriteMuseum}
-                onChange={(e) => setFavoriteMuseum(e.target.value)}
-                placeholder="Enter your favorite museum"
-                className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-400 dark:placeholder-gray-500"
-              />
+                Edit
+              </Link>
             </div>
 
-            {/* Theme Selection */}
-            <div>
-              <label
-                htmlFor="theme"
-                className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2"
-              >
-                Current Theme
-              </label>
-              <div className="relative">
-                <select
-                  id="theme"
-                  value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
-                  className="w-full px-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-indigo-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white appearance-none cursor-pointer"
-                >
-                  {THEMES.map(t => (
-                    <option key={t} value={t}>
-                      {t.replace('theme-', '').charAt(0).toUpperCase() + t.replace('theme-', '').slice(1)}
-                    </option>
-                  ))}
-                </select>
-                <div className="absolute inset-y-0 right-0 flex items-center pr-3 pointer-events-none">
-                  <svg
-                    className="h-5 w-5 text-gray-400"
-                    xmlns="http://www.w3.org/2000/svg"
-                    viewBox="0 0 20 20"
-                    fill="currentColor"
-                  >
-                    <path
-                      fillRule="evenodd"
-                      d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                      clipRule="evenodd"
-                    />
-                  </svg>
+            {/* Profile Information */}
+            <div className="space-y-4 border-t border-gray-200 pt-6">
+              <div>
+                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                  Profile Information
+                </h3>
+                <div className="space-y-3">
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Email</p>
+                    <p className="text-sm text-gray-900">{email}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-medium text-gray-500 mb-1">Location</p>
+                    <p className="text-sm text-gray-900">{location}</p>
+                  </div>
+                  {dbUser?.theme && (
+                    <div>
+                      <p className="text-xs font-medium text-gray-500 mb-1">Theme</p>
+                      <p className="text-sm text-gray-900 capitalize">
+                        {dbUser.theme.replace('theme-', '').replace('-', ' ')}
+                      </p>
+                    </div>
+                  )}
                 </div>
               </div>
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                Select the theme you are currently working with for your art curation
-              </p>
             </div>
-
-            {/* Dark Mode Toggle */}
-            <div>
-              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
-                Appearance
-              </label>
-              <button
-                type="button"
-                onClick={() => setDark(d => !d)}
-                className="w-full sm:w-auto px-6 py-3 bg-gray-200 dark:bg-gray-700 text-gray-900 dark:text-white font-medium rounded-lg hover:bg-gray-300 dark:hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200"
-              >
-                {dark ? '🌙 Dark Mode' : '☀️ Light Mode'}
-              </button>
-              <p className="mt-2 text-sm text-gray-500 dark:text-gray-400">
-                Toggle between dark and light appearance
-              </p>
-            </div>
-
-            {/* Submit Button */}
-            <div className="pt-4">
-              <button
-                type="submit"
-                className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-indigo-600 to-purple-600 text-white font-medium rounded-lg shadow-lg hover:from-indigo-700 hover:to-purple-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-all duration-200 transform hover:scale-105"
-              >
-                Save Changes
-              </button>
-            </div>
-          </form>
-
-          {/* User Info Display */}
-          {user && (
-            <div className="mt-8 pt-8 border-t border-gray-200 dark:border-gray-700">
-              <h2 className="text-lg font-semibold text-gray-900 dark:text-white mb-4">
-                Account Information
-              </h2>
-              <div className="space-y-2 text-sm">
-                <p className="text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">Name:</span> {user.fullName || user.firstName || 'Not set'}
-                </p>
-                <p className="text-gray-600 dark:text-gray-400">
-                  <span className="font-medium">Email:</span> {user.primaryEmailAddress?.emailAddress || 'Not set'}
-                </p>
-              </div>
-            </div>
-          )}
+          </div>
         </div>
       </div>
     </div>

@@ -3,10 +3,11 @@
 import { useState } from "react";
 import Image from "next/image";
 import Link from "next/link";
-import { useUser } from "@clerk/nextjs";
+import { useUser, useClerk, SignInButton } from "@clerk/nextjs";
 
 const Navbar: React.FC = () => {
     const { isLoaded, user } = useUser();
+    const { signOut } = useClerk();
     const [mobileOpen, setMobileOpen] = useState(false);
     const [profileOpen, setProfileOpen] = useState(false);
 
@@ -96,33 +97,47 @@ const Navbar: React.FC = () => {
                         </button>
 
                         <div className="relative ml-3">
-                            <button
-                                onClick={() => setProfileOpen((s) => !s)}
-                                className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
-                                aria-haspopup="true"
-                                aria-expanded={profileOpen}
-                            >
-                                <span className="sr-only">Open user menu</span>
-                                {isLoaded && user ? (
-                                    <Image
-                                        src={userImage}
-                                        alt={user?.fullName || "User avatar"}
-                                        width={32}
-                                        height={32}
-                                        className="rounded-full bg-gray-800"
-                                        unoptimized={userImage.startsWith('http')}
-                                    />
-                                ) : (
-                                    <div className="h-8 w-8 rounded-full bg-gray-700" />
-                                )}
-                            </button>
+                            {isLoaded && user ? (
+                                <>
+                                    <button
+                                        onClick={() => setProfileOpen((s) => !s)}
+                                        className="relative flex rounded-full focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500"
+                                        aria-haspopup="true"
+                                        aria-expanded={profileOpen}
+                                    >
+                                        <span className="sr-only">Open user menu</span>
+                                        <Image
+                                            src={userImage}
+                                            alt={user?.fullName || "User avatar"}
+                                            width={32}
+                                            height={32}
+                                            className="rounded-full bg-gray-800"
+                                            unoptimized={userImage.startsWith('http')}
+                                        />
+                                    </button>
 
-                            {profileOpen && (
-                                <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
-                                    <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your profile</Link>
-                                    <Link href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
-                                    <Link href="#" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Sign out</Link>
-                                </div>
+                                    {profileOpen && (
+                                        <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
+                                            <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your profile</Link>
+                                            <Link href="/profile/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
+                                            <button
+                                                onClick={() => {
+                                                    signOut();
+                                                    setProfileOpen(false);
+                                                }}
+                                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                            >
+                                                Sign out
+                                            </button>
+                                        </div>
+                                    )}
+                                </>
+                            ) : (
+                                <SignInButton mode="modal">
+                                    <button className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
+                                        Sign in
+                                    </button>
+                                </SignInButton>
                             )}
                         </div>
                     </div>
