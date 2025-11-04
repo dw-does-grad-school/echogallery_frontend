@@ -223,3 +223,27 @@
   --border: 24 12% 28%;
   --ring: 0 75% 54%;
 }
+
+/* ========= 9) BASE STYLES ========= */
+
+html {
+  background-color: hsl(var(--bg));
+  color: hsl(var(--fg));
+  font-family: var(--font-body), ui-sans-serif, system-ui, sans-serif;
+  transition: background-color 0.35s ease, color 0.35s ease;
+  color-scheme: light;
+}
+
+html.dark {
+  color-scheme: dark;
+}
+
+body {
+  min-height: 100%;
+  background-color: hsl(var(--bg));
+  color: hsl(var(--fg));
+}
+
+a {
+  color: inherit;
+}

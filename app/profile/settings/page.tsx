@@ -24,13 +24,28 @@ export default function ProfilePage() {
   const [saving, setSaving] = useState(false);
   const [saveMessage, setSaveMessage] = useState<{ type: 'success' | 'error'; text: string } | null>(null);
 
-  // Apply theme changes in real-time
+  const baseSaveButtonClasses =
+    'w-full sm:w-auto px-6 py-3 rounded-lg font-medium shadow-lg transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-body focus:outline-none focus:ring-2 focus:ring-accent';
+  const saveButtonPaletteClasses = dark
+    ? 'bg-card text-fg border border-border hover:bg-card/90 focus:ring-offset-2 focus:ring-offset-card'
+    : 'bg-fg text-bg border border-fg hover:bg-fg/90 focus:ring-offset-2 focus:ring-offset-bg';
+  const saveButtonClasses = `${baseSaveButtonClasses} ${saveButtonPaletteClasses}`;
+
+  // Apply theme changes in real-time (preview effect)
   useEffect(() => {
-    const html = document.documentElement;
-    THEMES.forEach(t => html.classList.remove(t));
-    html.classList.remove('dark');
-    html.classList.add(theme);
-    if (dark) html.classList.add('dark');
+    if (typeof window !== 'undefined') {
+      const html = document.documentElement;
+      // Remove all theme classes
+      THEMES.forEach(t => html.classList.remove(t));
+      // Remove dark class
+      html.classList.remove('dark');
+      // Add the selected theme
+      html.classList.add(theme);
+      // Reapply dark mode if enabled
+      if (dark) {
+        html.classList.add('dark');
+      }
+    }
   }, [theme, dark]);
 
   // Load user data from database on mount
@@ -50,11 +65,22 @@ export default function ProfilePage() {
                 ? result.user.theme 
                 : `theme-${result.user.theme}`;
               setTheme(themeValue);
+              // Apply immediately
+              if (typeof window !== 'undefined') {
+                const html = document.documentElement;
+                THEMES.forEach(t => html.classList.remove(t));
+                html.classList.add(themeValue);
+              }
             } else {
               // Fallback to HTML element theme if not in database
-              const html = document.documentElement;
-              const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
-              setTheme(currentTheme);
+              if (typeof window !== 'undefined') {
+                const html = document.documentElement;
+                const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
+                setTheme(currentTheme);
+                // Apply immediately
+                THEMES.forEach(t => html.classList.remove(t));
+                html.classList.add(currentTheme);
+              }
             }
             // Parse uiPreferences for favoriteMuseum
             if (result.user.uiPreferences) {
@@ -69,20 +95,35 @@ export default function ProfilePage() {
             }
           } else {
             // If no user data, initialize from HTML element
-            const html = document.documentElement;
-            const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
-            setTheme(currentTheme);
+            if (typeof window !== 'undefined') {
+              const html = document.documentElement;
+              const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
+              setTheme(currentTheme);
+              // Apply immediately
+              THEMES.forEach(t => html.classList.remove(t));
+              html.classList.add(currentTheme);
+              // Set dark mode from HTML element
+              const isDark = html.classList.contains('dark');
+              setDark(isDark);
+            }
           }
-          // Set dark mode from HTML element
-          const html = document.documentElement;
-          const isDark = html.classList.contains('dark');
-          setDark(isDark);
+          // Set dark mode from HTML element (if user data exists)
+          if (typeof window !== 'undefined' && result.user) {
+            const html = document.documentElement;
+            const isDark = html.classList.contains('dark');
+            setDark(isDark);
+          }
         } catch (error) {
           console.error('Error loading user data:', error);
           // Fallback to HTML element theme on error
-          const html = document.documentElement;
-          const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
-          setTheme(currentTheme);
+          if (typeof window !== 'undefined') {
+            const html = document.documentElement;
+            const currentTheme = THEMES.find(t => html.classList.contains(t)) || 'theme-modern';
+            setTheme(currentTheme);
+            // Apply immediately
+            THEMES.forEach(t => html.classList.remove(t));
+            html.classList.add(currentTheme);
+          }
         }
       }
     }
@@ -205,7 +246,18 @@ export default function ProfilePage() {
                 <select
                   id="theme"
                   value={theme}
-                  onChange={(e) => setTheme(e.target.value)}
+                  onChange={(e) => {
+                    const newTheme = e.target.value;
+                    setTheme(newTheme);
+                    // Apply immediately for preview
+                    if (typeof window !== 'undefined') {
+                      const html = document.documentElement;
+                      THEMES.forEach(t => html.classList.remove(t));
+                      html.classList.remove('dark');
+                      html.classList.add(newTheme);
+                      if (dark) html.classList.add('dark');
+                    }
+                  }}
                   className="w-full px-4 py-2 border border-border rounded-lg focus:ring-2 focus:ring-accent focus:border-transparent bg-card text-fg appearance-none cursor-pointer font-body"
                 >
                   {THEMES.map(t => (
@@ -241,7 +293,19 @@ export default function ProfilePage() {
               </label>
               <button
                 type="button"
-                onClick={() => setDark(d => !d)}
+                onClick={() => {
+                  const newDark = !dark;
+                  setDark(newDark);
+                  // Apply immediately for preview
+                  if (typeof window !== 'undefined') {
+                    const html = document.documentElement;
+                    if (newDark) {
+                      html.classList.add('dark');
+                    } else {
+                      html.classList.remove('dark');
+                    }
+                  }
+                }}
                 className="w-full sm:w-auto px-6 py-3 bg-muted text-fg font-medium rounded-lg hover:bg-muted/80 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all duration-200 font-body"
               >
                 {dark ? '🌙 Dark Mode' : '☀️ Light Mode'}
@@ -264,11 +328,7 @@ export default function ProfilePage() {
                   {saveMessage.text}
                 </div>
               )}
-              <button
-                type="submit"
-                disabled={saving}
-                className="w-full sm:w-auto px-6 py-3 bg-gradient-to-r from-accent to-accent2 text-white font-medium rounded-lg shadow-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 transition-all duration-200 transform hover:scale-105 disabled:opacity-50 disabled:cursor-not-allowed disabled:transform-none font-body"
-              >
+              <button type="submit" disabled={saving} className={saveButtonClasses}>
                 {saving ? 'Saving...' : 'Save Changes'}
               </button>
             </div>

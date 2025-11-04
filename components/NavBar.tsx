@@ -16,7 +16,7 @@ const Navbar: React.FC = () => {
         (user as any)?.profileImageUrl || (user as any)?.imageUrl || "/favicon.ico";
 
     return (
-        <nav className="relative bg-gray-800">
+        <nav className="relative bg-card border-b border-border text-fg shadow-sm">
             <div className="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
                 <div className="relative flex h-16 items-center justify-between">
                     <div className="absolute inset-y-0 left-0 flex items-center sm:hidden">
@@ -25,7 +25,7 @@ const Navbar: React.FC = () => {
                             onClick={() => setMobileOpen((s) => !s)}
                             aria-controls="mobile-menu"
                             aria-expanded={mobileOpen}
-                            className="relative inline-flex items-center justify-center rounded-md p-2 text-gray-400 hover:bg-white/5 hover:text-white focus:outline-2 focus:outline-offset-1 focus:outline-indigo-500"
+                            className="relative inline-flex items-center justify-center rounded-md p-2 text-fg/70 hover:bg-muted/70 hover:text-fg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card transition"
                         >
                             <span className="sr-only">Open main menu</span>
                             {mobileOpen ? (
@@ -69,16 +69,16 @@ const Navbar: React.FC = () => {
 
                         <div className="hidden sm:ml-6 sm:block">
                             <div className="flex space-x-4">
-                                <Link href="#" className="rounded-md bg-gray-900 px-3 py-2 text-sm font-medium text-white">
+                                <Link href="#" className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent/90">
                                     Dashboard
                                 </Link>
-                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">
+                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
                                     Team
                                 </Link>
-                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">
+                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
                                     Projects
                                 </Link>
-                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-gray-300 hover:bg-white/5 hover:text-white">
+                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
                                     Calendar
                                 </Link>
                             </div>
@@ -88,7 +88,7 @@ const Navbar: React.FC = () => {
                     <div className="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
                         <button
                             type="button"
-                            className="relative rounded-full p-1 text-gray-400 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500"
+                            className="relative rounded-full p-1 text-fg/70 hover:text-fg focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card transition"
                         >
                             <span className="sr-only">View notifications</span>
                             <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth={1.5} aria-hidden="true" className="h-6 w-6">
@@ -111,21 +111,21 @@ const Navbar: React.FC = () => {
                                             alt={user?.fullName || "User avatar"}
                                             width={32}
                                             height={32}
-                                            className="rounded-full bg-gray-800"
+                                            className="rounded-full border border-border bg-card/60"
                                             unoptimized={userImage.startsWith('http')}
                                         />
                                     </button>
 
                                     {profileOpen && (
-                                        <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5">
-                                            <Link href="/profile" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Your profile</Link>
-                                            <Link href="/profile/settings" className="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-100">Settings</Link>
+                                        <div className="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-card py-1 shadow-lg border border-border">
+                                            <Link href="/profile" className="block px-4 py-2 text-sm text-fg/80 hover:bg-muted/70 hover:text-fg">Your profile</Link>
+                                            <Link href="/profile/settings" className="block px-4 py-2 text-sm text-fg/80 hover:bg-muted/70 hover:text-fg">Settings</Link>
                                             <button
                                                 onClick={() => {
                                                     signOut();
                                                     setProfileOpen(false);
                                                 }}
-                                                className="block w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100"
+                                                className="block w-full text-left px-4 py-2 text-sm text-fg/80 hover:bg-muted/70 hover:text-fg"
                                             >
                                                 Sign out
                                             </button>
@@ -134,7 +134,7 @@ const Navbar: React.FC = () => {
                                 </>
                             ) : (
                                 <SignInButton mode="modal">
-                                    <button className="rounded-md bg-indigo-600 px-4 py-2 text-sm font-medium text-white hover:bg-indigo-500 focus:outline-2 focus:outline-offset-2 focus:outline-indigo-500">
+                                    <button className="rounded-md bg-accent px-4 py-2 text-sm font-medium text-white hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card transition">
                                         Sign in
                                     </button>
                                 </SignInButton>
@@ -147,10 +147,10 @@ const Navbar: React.FC = () => {
             {mobileOpen && (
                 <div id="mobile-menu" className="block sm:hidden">
                     <div className="space-y-1 px-2 pt-2 pb-3">
-                        <Link href="#" className="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white">Dashboard</Link>
-                        <Link href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Team</Link>
-                        <Link href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Projects</Link>
-                        <Link href="#" className="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-white/5 hover:text-white">Calendar</Link>
+                        <Link href="#" className="block rounded-md bg-accent px-3 py-2 text-base font-medium text-white shadow-sm transition hover:bg-accent/90">Dashboard</Link>
+                        <Link href="#" className="block rounded-md px-3 py-2 text-base font-medium text-fg/80 hover:bg-muted/70 hover:text-fg transition">Team</Link>
+                        <Link href="#" className="block rounded-md px-3 py-2 text-base font-medium text-fg/80 hover:bg-muted/70 hover:text-fg transition">Projects</Link>
+                        <Link href="#" className="block rounded-md px-3 py-2 text-base font-medium text-fg/80 hover:bg-muted/70 hover:text-fg transition">Calendar</Link>
                     </div>
                 </div>
             )}

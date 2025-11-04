@@ -36,18 +36,18 @@ export default function ProfilePage() {
 
   if (!clerkLoaded || loading) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
-        <div className="text-lg text-gray-600">Loading...</div>
+      <div className="flex items-center justify-center min-h-screen bg-bg">
+        <div className="text-lg text-fg/60">Loading...</div>
       </div>
     );
   }
 
   if (!clerkUser) {
     return (
-      <div className="flex items-center justify-center min-h-screen bg-gray-50">
+      <div className="flex items-center justify-center min-h-screen bg-bg">
         <div className="text-center">
-          <h1 className="text-2xl font-bold text-gray-900 mb-4">Please sign in</h1>
-          <p className="text-gray-600">You need to be signed in to view your profile.</p>
+          <h1 className="text-2xl font-bold text-fg mb-4 font-display">Please sign in</h1>
+          <p className="text-fg/60 font-body">You need to be signed in to view your profile.</p>
         </div>
       </div>
     );
@@ -59,15 +59,15 @@ export default function ProfilePage() {
   const location = dbUser?.location || 'Not set';
 
   return (
-    <div className="h-screen bg-gray-50 overflow-hidden">
-      <div className="flex h-full">
+    <div className="min-h-screen bg-bg overflow-hidden">
+      <div className="flex min-h-full">
         {/* Main Content Area - Left side, blank for now */}
         <div className="flex-1 p-8">
           {/* Empty for now as requested */}
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-80 h-full bg-white border-l border-gray-200 shadow-sm">
+        <div className="w-80 min-h-full bg-card border-l border-border shadow-sm text-fg">
           <div className="p-6">
             {/* Profile Header */}
             <div className="flex flex-col items-center mb-6">
@@ -77,47 +77,39 @@ export default function ProfilePage() {
                   alt={displayName}
                   width={96}
                   height={96}
-                  className="rounded-full border-4 border-gray-200"
+                  className="rounded-full border-4 border-border bg-card"
                   unoptimized={userImage.startsWith('http')}
                 />
               </div>
-              <h2 className="text-xl font-semibold text-gray-900 mb-1">{displayName}</h2>
-              <p className="text-sm text-gray-500">{email}</p>
+              <h2 className="text-xl font-semibold text-fg mb-1 font-display">{displayName}</h2>
+              <p className="text-sm text-fg/60 font-body">{email}</p>
             </div>
 
             {/* Edit Button */}
             <div className="mb-6">
               <Link
                 href="/profile/settings"
-                className="w-full block text-center px-4 py-2 bg-indigo-600 text-white rounded-md hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 transition-colors"
+                className="w-full block text-center px-4 py-2 bg-accent text-white rounded-md shadow-sm hover:bg-accent/90 focus:outline-none focus:ring-2 focus:ring-accent focus:ring-offset-2 focus:ring-offset-card transition"
               >
                 Edit
               </Link>
             </div>
 
             {/* Profile Information */}
-            <div className="space-y-4 border-t border-gray-200 pt-6">
+            <div className="space-y-4 border-t border-border pt-6">
               <div>
-                <h3 className="text-xs font-semibold text-gray-500 uppercase tracking-wider mb-3">
+                <h3 className="text-xs font-semibold text-fg/60 uppercase tracking-wider mb-3">
                   Profile Information
                 </h3>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-1">Email</p>
-                    <p className="text-sm text-gray-900">{email}</p>
+                    <p className="text-xs font-medium text-fg/60 mb-1">Email</p>
+                    <p className="text-sm text-fg">{email}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-gray-500 mb-1">Location</p>
-                    <p className="text-sm text-gray-900">{location}</p>
+                    <p className="text-xs font-medium text-fg/60 mb-1">Location</p>
+                    <p className="text-sm text-fg">{location}</p>
                   </div>
-                  {dbUser?.theme && (
-                    <div>
-                      <p className="text-xs font-medium text-gray-500 mb-1">Theme</p>
-                      <p className="text-sm text-gray-900 capitalize">
-                        {dbUser.theme.replace('theme-', '').replace('-', ' ')}
-                      </p>
-                    </div>
-                  )}
                 </div>
               </div>
             </div>
