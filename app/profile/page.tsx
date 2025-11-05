@@ -67,7 +67,7 @@ export default function ProfilePage() {
         </div>
 
         {/* Right Sidebar */}
-        <div className="w-80 min-h-full bg-card border-l border-border shadow-sm text-fg">
+        <div className="w-80 min-h-[calc(100vh-64px)] bg-card border-l border-border shadow-sm text-fg">
           <div className="p-6">
             {/* Profile Header */}
             <div className="flex flex-col items-center mb-6">
@@ -103,12 +103,20 @@ export default function ProfilePage() {
                 </h3>
                 <div className="space-y-3">
                   <div>
-                    <p className="text-xs font-medium text-fg/60 mb-1">Email</p>
+                    <p className="text-xs font-bold text-fg/60 mb-1">Email</p>
                     <p className="text-sm text-fg">{email}</p>
                   </div>
                   <div>
-                    <p className="text-xs font-medium text-fg/60 mb-1">Location</p>
+                    <p className="text-xs font-bold text-fg/60 mb-1">Location</p>
                     <p className="text-sm text-fg">{location}</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-fg/60 mb-1">Favorite Museum</p>
+                    <p className="text-sm text-fg">The Metropolitan Museum of Art</p>
+                  </div>
+                  <div>
+                    <p className="text-xs font-bold text-fg/60 mb-1">Favorite Movement</p>
+                    <p className="text-sm text-fg">Post Impressionism</p>
                   </div>
                 </div>
               </div>

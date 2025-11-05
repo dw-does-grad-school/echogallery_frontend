@@ -58,8 +58,8 @@ const Navbar: React.FC = () => {
                         <div className="flex shrink-0 items-center">
                             <Link href="/" className="inline-flex">
                                 <Image
-                                    src="/logo.svg"
-                                    alt="Your Company"
+                                    src="/echoLogo.png"
+                                    alt="Echo Gallery"
                                     width={32}
                                     height={32}
                                     className="h-8 w-auto"
@@ -69,17 +69,17 @@ const Navbar: React.FC = () => {
 
                         <div className="hidden sm:ml-6 sm:block">
                             <div className="flex space-x-4">
-                                <Link href="#" className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent/90">
-                                    Dashboard
+                                <Link href="/discover" className="rounded-md bg-accent px-3 py-2 text-sm font-medium text-white shadow-sm transition hover:bg-accent/90">
+                                    Discover
                                 </Link>
-                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
-                                    Team
+                                <Link href="/gallery" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
+                                    Your Gallery
                                 </Link>
-                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
-                                    Projects
+                                <Link href="/events" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
+                                    Events
                                 </Link>
-                                <Link href="#" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
-                                    Calendar
+                                <Link href="/collections" className="rounded-md px-3 py-2 text-sm font-medium text-fg/70 hover:bg-muted/70 hover:text-fg transition">
+                                    Collections
                                 </Link>
                             </div>
                         </div>

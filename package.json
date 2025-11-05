@@ -14,8 +14,10 @@
     "dotenv": "^17.2.3",
     "drizzle-orm": "^0.44.7",
     "next": "16.0.1",
+    "openai": "^6.8.0",
     "react": "19.2.0",
-    "react-dom": "19.2.0"
+    "react-dom": "19.2.0",
+    "sharp": "^0.33.4"
   },
   "devDependencies": {
     "@tailwindcss/postcss": "^4",
